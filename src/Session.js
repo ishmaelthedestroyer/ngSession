@@ -151,7 +151,7 @@ angular.module('ngSession', [])
         }
       });
 
-      return this;
+      return session;
     };
 
     /**
