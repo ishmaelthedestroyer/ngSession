@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ngSession</title>
+  <base href='/examples' />
+</head>
+<body data-ng-controller='AppCtrl as AppCtrl'>
+
+Session:
+<br />
+<pre>{{ AppCtrl.session | json }}</pre>
+
+<br /><br />
+
+<a href='/examples/login'>Login</a><br />
+<a href='/examples/logout'>Logout</a><br />
+<a href='/examples/requires-auth'>Requires Auth</a><br />
+<a href='/examples/no-auth'>No Auth</a><br />
+
+<br /><br />
+
+<div ui-view></div>
+
+<script src="../deps/store.js/store.min.js"></script>
+<script src='../deps/angular/angular.js'></script>
+<script src='../deps/ui-router/release/angular-ui-router.js'></script>
+<script src='../deps/Util/dist/Util.js'></script>
+<script src='../deps/Endpoint/dist/Endpoint.js'></script>
+<script src='../dist/ngSession.js'></script>
+<script>
+var app = angular.module('app', [
+  'Util',
+  'Endpoint',
+  'ui.router',
+  'ngSession',
+]).controller('AppCtrl', [
+  '$rootScope',
+  'Session',
+  function($rootScope, Session) {
+    var
+      alias = this,
+      user = {
+        email: 'user@email.com',
+        firstName: 'Example',
+        lastName: 'User',
+      };
+
+    // listen for changes to session, update global object
+    $rootScope.$on('session:login', function(event, data) {
+      alias.session = data;
+    });
+
+    // listen for changes to session, update global object
+    $rootScope.$on('session:loaded', function(event, data) {
+      alias.session = data;
+    });
+
+    Session.load();
+
+    alias.login = function() {
+      Session.start(user);
+    };
+
+    alias.logout = function() {
+      Session.end();
+    };
+
+    return alias;
+  }
+]).config([
+  '$stateProvider',
+  '$urlRouterProvider',
+  '$locationProvider',
+  function($stateProvider, $urlRouterProvider, $locationProvider) {
+    $urlRouterProvider.otherwise('/examples/404');
+    $locationProvider.html5Mode(true);
+  }
+]).config([
+  '$stateProvider',
+  function($stateProvider) {
+    $stateProvider.state('404', {
+      url: '/examples/404',
+      template: '<h1>404</h1>'
+    });
+  }
+]).config([
+  '$stateProvider',
+  function($stateProvider) {
+    $stateProvider.state('login', {
+      url: '/examples/login',
+      template: "<button data-ng-click='AppCtrl.login()'>Login</button>",
+      redirectAuthenticated: true,
+    });
+  }
+]).config([
+  '$stateProvider',
+  function($stateProvider) {
+    $stateProvider.state('logout', {
+      url: '/examples/logout',
+      template: "<button data-ng-click='AppCtrl.logout()'>Logout</button>"
+    });
+  }
+]).config([
+  '$stateProvider',
+  function($stateProvider) {
+    $stateProvider.state('requires-auth', {
+      url: '/examples/requires-auth',
+      template: '<h1>This page requires authentication.</h1>',
+      requiresLogin: true,
+    });
+  }
+]).config([
+  '$stateProvider',
+  function($stateProvider) {
+    $stateProvider.state('no-auth', {
+      url: '/examples/no-auth',
+      template: '<h1>No authentication required here.</h1>'
+    });
+  }
+]).run([
+  '$rootScope',
+  '$state',
+  'Session',
+  function ($rootScope, $state, Session) {
+    Session.load();
+
+    /*
+    $rootScope.$on('$stateChangeSuccess',function(event){
+      console.log('$stateChangeSuccess - fired after dom rendered',event);
+    });
+    */
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+      var
+        requiresLogin = toState.requiresLogin,
+        redirectAuthenticated = toState.redirectAuthenticated,
+        isAuthenticated = Session.isAuthenticated();
+
+      if (requiresLogin && !isAuthenticated) {
+        console.log('route requires authentication, redirecting');
+        event.preventDefault();
+        $state.go('login');
+      } else if (redirectAuthenticated && isAuthenticated) {
+        event.preventDefault();
+        $state.go('no-auth');
+      }
+    });
+  }
+]);
+
+angular
+  .element(document)
+  .ready(function() {
+    angular.bootstrap(document, ['app']);
+  });
+</script>
+</body>
+</html>

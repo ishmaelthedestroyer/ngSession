@@ -1,0 +1,27 @@
+{
+  "name": "ngSession",
+  "version": "0.0.0",
+  "description": "Sessions for Angular.js.",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ishmaelthedestroyer/ngSession.git"
+  },
+  "author": "ishmaelthedestroyer <ishmaelthedestroyer@gmail.com> (http://ishmaelthedestroyer.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ishmaelthedestroyer/ngSession/issues"
+  },
+  "homepage": "https://github.com/ishmaelthedestroyer/ngSession",
+  "devDependencies": {
+    "body-parser": "^1.10.1",
+    "express": "^4.13.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-uglify": "^0.7.0",
+    "load-grunt-tasks": "^2.0.0"
+  }
+}
