@@ -21,9 +21,10 @@ Session:
 
 <div ui-view></div>
 
-<script src="../deps/store.js/store.min.js"></script>
+<script src="../deps/ngStore/deps/store.js/store.min.js"></script>
 <script src='../deps/angular/angular.js'></script>
 <script src='../deps/ui-router/release/angular-ui-router.js'></script>
+<script src="../deps/ngStore/dist/ngStore.js"></script>
 <script src='../deps/Util/dist/Util.js'></script>
 <script src='../deps/Endpoint/dist/Endpoint.js'></script>
 <script src='../dist/ngSession.js'></script>
@@ -32,6 +33,7 @@ var app = angular.module('app', [
   'Util',
   'Endpoint',
   'ui.router',
+  'ngStore',
   'ngSession',
 ]).controller('AppCtrl', [
   '$rootScope',

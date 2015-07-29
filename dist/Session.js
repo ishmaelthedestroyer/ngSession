@@ -2,8 +2,8 @@ angular.module('ngSession', [])
 .service('Session', [
   '$log',
   '$rootScope',
-  '$cacheFactory',
-  function($log, $rootScope, $cacheFactory) {
+  'ngStore',
+  function($log, $rootScope, ngStore) {
 
     /* ==========================================================================
        Internal & scope variables
@@ -21,7 +21,7 @@ angular.module('ngSession', [])
        * cache for storing sessions
        * @type {Object}
        */
-      cache = $cacheFactory(prefix);
+      cache = ngStore.get(prefix);
 
       /**
        * active session data
@@ -63,10 +63,10 @@ angular.module('ngSession', [])
       }
 
       if (session) {
-        store.set(prefix + ':session', session);
+        cache.set(prefix + ':session', session);
         $log.debug('Cached session.');
       } else {
-        store.remove('session:session');
+        cache.remove(prefix + ':session');
         $log.debug('Removed cached session.', session);
       }
 
@@ -144,7 +144,7 @@ angular.module('ngSession', [])
      */
     this.load = function() {
       update('loaded', function() {
-        session = store.get(prefix + ':session');
+        session = cache.get(prefix + ':session');
 
         if (session) {
           isAuthenticated = true;
