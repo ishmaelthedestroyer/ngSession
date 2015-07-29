@@ -11,9 +11,7 @@ module.exports = function(grunt) {
   var config = {
     dist: {
       dir: 'dist/',
-      Auth: 'dist/Auth.js',
       Session: 'dist/Session.js',
-      _module: 'dist/_module.js',
       ngSession: 'dist/ngSession.js'
     },
     src: {
@@ -53,23 +51,6 @@ module.exports = function(grunt) {
 
     /** concatentation tasks for building the source files */
     concat: {
-
-      Auth: {
-        options: {
-          // stripBanners: true
-          banner: '',
-          footer: '',
-        },
-        src: (function() {
-          var cwd = config.src.dir;
-
-          return files.Auth.map(function(path) {
-            return cwd + path;
-          });
-        })(),
-        dest: config.dist.Auth
-      },
-
       Session: {
         options: {
           // stripBanners: true
@@ -86,22 +67,6 @@ module.exports = function(grunt) {
         dest: config.dist.Session
       },
 
-      module: {
-        options: {
-          // stripBanners: true
-          banner: '',
-          footer: '',
-        },
-        src: (function() {
-          var cwd = config.src.dir;
-
-          return files._module.map(function(path) {
-            return cwd + path;
-          });
-        })(),
-        dest: config.dist._module
-      },
-
       ngSession: {
         options: {
           // stripBanners: true
@@ -110,9 +75,7 @@ module.exports = function(grunt) {
         },
         src: (function() {
           return [
-            config.dist.Auth,
             config.dist.Session,
-            config.dist._module
           ];
         })(),
         dest: config.dist.ngSession
@@ -122,23 +85,6 @@ module.exports = function(grunt) {
 
     /** uglify (javascript minification) config */
     uglify: {
-      Auth: {
-        options: {},
-        files: [
-          {
-            src: config.dist.Auth,
-            dest: (function() {
-              var split = config.dist.Auth.split('.');
-              split.pop(); // removes `js` extension
-              split.push('min'); // adds `min` extension
-              split.push('js'); // adds `js` extension
-
-              return split.join('.');
-            })()
-          }
-        ]
-      },
-
       Session: {
         options: {},
         files: [
@@ -146,23 +92,6 @@ module.exports = function(grunt) {
             src: config.dist.Session,
             dest: (function() {
               var split = config.dist.Session.split('.');
-              split.pop(); // removes `js` extension
-              split.push('min'); // adds `min` extension
-              split.push('js'); // adds `js` extension
-
-              return split.join('.');
-            })()
-          }
-        ]
-      },
-
-      module: {
-        options: {},
-        files: [
-          {
-            src: config.dist._module,
-            dest: (function() {
-              var split = config.dist._module.split('.');
               split.pop(); // removes `js` extension
               split.push('min'); // adds `min` extension
               split.push('js'); // adds `js` extension
